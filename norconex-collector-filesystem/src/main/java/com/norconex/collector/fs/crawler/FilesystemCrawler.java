@@ -224,9 +224,12 @@ public class FilesystemCrawler extends AbstractCrawler {
         FileImporterPipelineContext fileContext =
                 new FileImporterPipelineContext(importerContext);
         fileContext.setFileObject(fileObject);
+        long start = System.currentTimeMillis();
         new FileImporterPipeline(
                 getCrawlerConfig().isKeepDownloads()).execute(fileContext);
-        return fileContext.getImporterResponse();
+        ImporterResponse res = fileContext.getImporterResponse();
+        LOG.error("*** Processed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
+        return res;
     }
 
     @Override
@@ -240,11 +243,12 @@ public class FilesystemCrawler extends AbstractCrawler {
     protected void executeCommitterPipeline(ICrawler crawler,
             ImporterDocument doc, ICrawlDataStore crawlDataStore,
             BaseCrawlData crawlData, BaseCrawlData cachedCrawlData) {
-
+        long start = System.currentTimeMillis();
         FileCommitterPipelineContext context = new FileCommitterPipelineContext(
                 (FilesystemCrawler) crawler, crawlDataStore, (FileDocument) doc,
                 crawlData, cachedCrawlData);
         new FileCommitterPipeline().execute(context);
+        LOG.error("*** Committed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @Override
