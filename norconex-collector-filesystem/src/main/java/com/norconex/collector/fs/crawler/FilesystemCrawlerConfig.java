@@ -59,6 +59,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
     private IStartPathsProvider[] startPathsProviders;
     
     private boolean keepDownloads;
+    private boolean skipDocumentFetch;
 
     private IFilesystemOptionsProvider optionsProvider = 
             new GenericFilesystemOptionsProvider();
@@ -119,6 +120,13 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
     }
     public void setKeepDownloads(boolean keepDownloads) {
         this.keepDownloads = keepDownloads;
+    }
+
+    public boolean isSkipDocumentFetch() {
+        return skipDocumentFetch;
+    }
+    public void setSkipDocumentFetch(boolean skipDocumentFetch) {
+        this.skipDocumentFetch = skipDocumentFetch;
     }
 
     /**
@@ -205,6 +213,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
             EnhancedXMLStreamWriter writer = new EnhancedXMLStreamWriter(out);
 
             writer.writeElementBoolean("keepDownloads", isKeepDownloads());
+            writer.writeElementBoolean("skipDocumentFetch", isSkipDocumentFetch());
             writer.writeStartElement("startPaths");
             
             String[] paths = getStartPaths();
@@ -282,6 +291,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
     
     private void loadSimpleSettings(XMLConfiguration xml) {
         setKeepDownloads(xml.getBoolean("keepDownloads", isKeepDownloads()));
+        setSkipDocumentFetch(xml.getBoolean("skipDocumentFetch", isSkipDocumentFetch()));
 
         String[] startPathsArray = xml.getStringArray("startPaths.path");
         setStartPaths(defaultIfEmpty(startPathsArray, getStartPaths()));
@@ -331,6 +341,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
         return new EqualsBuilder()
                 .appendSuper(super.equals(castOther))
                 .append(keepDownloads, castOther.keepDownloads)
+                .append(skipDocumentFetch, castOther.skipDocumentFetch)
                 .append(startPaths, castOther.startPaths)
                 .append(pathsFiles, castOther.pathsFiles)
                 .append(startPathsProviders, castOther.startPathsProviders)
@@ -348,6 +359,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
         return new HashCodeBuilder()
                 .appendSuper(super.hashCode())
                 .append(keepDownloads)
+                .append(skipDocumentFetch)
                 .append(startPaths)
                 .append(pathsFiles)
                 .append(startPathsProviders)
@@ -365,6 +377,7 @@ public class FilesystemCrawlerConfig extends AbstractCrawlerConfig {
         return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
                 .appendSuper(super.toString())
                 .append("keepDownloads", keepDownloads)
+                .append("skipDocumentFetch", skipDocumentFetch)
                 .append("startPaths", startPaths)
                 .append("pathsFiles", pathsFiles)
                 .append("startPathsProviders", startPathsProviders)

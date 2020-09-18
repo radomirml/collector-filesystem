@@ -52,12 +52,14 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
     private static final Logger LOG =
             LogManager.getLogger(FileImporterPipeline.class);
 
-    public FileImporterPipeline(boolean isKeepDownloads) {
+    public FileImporterPipeline(boolean isKeepDownloads, boolean isSkipDocumentFetch) {
         addStage(new FolderPathsExtractorStage());
         addStage(new FileMetadataFetcherStage());
         addStage(new FileMetadataFiltersStage());
         addStage(new FileMetadataChecksumStage());
-        addStage(new DocumentFetchStage());
+        if (!isSkipDocumentFetch) {
+            addStage(new DocumentFetchStage());
+        }
         if (isKeepDownloads) {
             addStage(new SaveDocumentStage());
         }

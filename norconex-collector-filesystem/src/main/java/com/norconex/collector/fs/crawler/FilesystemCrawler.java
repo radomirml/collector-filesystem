@@ -226,7 +226,7 @@ public class FilesystemCrawler extends AbstractCrawler {
         fileContext.setFileObject(fileObject);
         long start = System.currentTimeMillis();
         new FileImporterPipeline(
-                getCrawlerConfig().isKeepDownloads()).execute(fileContext);
+                getCrawlerConfig().isKeepDownloads(), getCrawlerConfig().isSkipDocumentFetch()).execute(fileContext);
         ImporterResponse res = fileContext.getImporterResponse();
         LOG.error("*** Processed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
         return res;
