@@ -72,7 +72,8 @@ public class GenericFileMetadataFetcher implements IFileMetadataFetcher {
             IFileSpecificMetaFetcher specificFetcher = FILE_SPECIFICS.get(
                     fileObject.getClass());
             if (specificFetcher != null) {
-                specificFetcher.fetchFileSpecificMeta(fileObject, metadata);
+                // TODO disabled getting ACL here (too many errors logged as doesn't work for UNC paths handled by SpecificLocalFileFetcher)
+                //specificFetcher.fetchFileSpecificMeta(fileObject, metadata);
             }
 
             FileContent content = fileObject.getContent();
