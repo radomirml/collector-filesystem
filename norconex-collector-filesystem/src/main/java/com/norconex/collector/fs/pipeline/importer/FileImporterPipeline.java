@@ -79,7 +79,7 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
                 if (file.getType() == FileType.FOLDER) {
                     long start = System.currentTimeMillis();
                     FileObject[] files = file.getChildren();
-                    LOG.error("*** List children of " + file.getURL() + " in " + (System.currentTimeMillis() - start) + "ms - " + (files != null ? files.length : 0) + " children");
+                    LOG.debug("*** List children of " + file.getURL() + " in " + (System.currentTimeMillis() - start) + "ms - " + (files != null ? files.length : 0) + " children");
                     for (FileObject childFile : files) {
                         // Special chars such as # can be valid in local
                         // file names, so get path from toString on local files,
@@ -163,7 +163,7 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
             CrawlState state = metaFetcher.fetchMetadada(fileObject, newMeta);
 
             metadata.putAll(newMeta);
-            LOG.error("*** Metadata " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
+            LOG.info("*** Metadata " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
 
             //--- Apply Metadata to document ---
             // TODO are there headers to enhance first based on attributes
@@ -228,9 +228,7 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
             crawlData.setCrawlDate(new Date());
             crawlData.setContentType(doc.getContentType());
             crawlData.setState(state);
-//            LOG.error("*** doc.getMetadata().keySet(): " + doc.getMetadata().keySet());
-//            LOG.error("*** doc.getMetadata().keySet(): " + ctx.getMetadata().keySet());
-            LOG.error("*** Downloaded " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms - size " + doc.getMetadata().getString("collector.filesize"));
+            LOG.info("*** Downloaded " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms - size " + doc.getMetadata().getString("collector.filesize"));
 
             if (state.isGoodState()) {
                 ctx.fireCrawlerEvent(CrawlerEvent.DOCUMENT_FETCHED,

@@ -228,7 +228,7 @@ public class FilesystemCrawler extends AbstractCrawler {
         new FileImporterPipeline(
                 getCrawlerConfig().isKeepDownloads(), getCrawlerConfig().isSkipDocumentFetch()).execute(fileContext);
         ImporterResponse res = fileContext.getImporterResponse();
-        LOG.error("*** Processed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
+        LOG.info("*** Processed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
         return res;
     }
 
@@ -248,7 +248,7 @@ public class FilesystemCrawler extends AbstractCrawler {
                 (FilesystemCrawler) crawler, crawlDataStore, (FileDocument) doc,
                 crawlData, cachedCrawlData);
         new FileCommitterPipeline().execute(context);
-        LOG.error("*** Committed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
+        LOG.info("*** Committed " + crawlData.getReference() + " in " + (System.currentTimeMillis() - start) + "ms");
     }
 
     @Override
