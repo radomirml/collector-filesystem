@@ -63,6 +63,17 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
         }
     }
 
+    static void reverseArray(FileObject[] arr, int size) 
+    { 
+        int i, k; 
+        FileObject temp;
+        for (i = 0; i < size / 2; i++) { 
+            temp = arr[i]; 
+            arr[i] = arr[size - i - 1]; 
+            arr[size - i - 1] = temp; 
+        } 
+    }
+
     public FileImporterPipeline(boolean isKeepDownloads, boolean isSkipDocumentFetch) {
         addStage(new FolderPathsExtractorStage());
         addStage(new FileMetadataFetcherStage());
@@ -90,7 +101,9 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
                 if (file.getType() == FileType.FOLDER) {
                     long start = System.currentTimeMillis();
                     FileObject[] files = file.getChildren();
-
+                    if (inverseDirVisit) {
+                        reverseArray(files, files.length);
+                    }
                     LOG.debug("*** List children of " + file.getURL() + " in " + (System.currentTimeMillis() - start) + "ms - " + (files != null ? files.length : 0) + " children");
                     for (FileObject childFile : files) {
                         // Special chars such as # can be valid in local
