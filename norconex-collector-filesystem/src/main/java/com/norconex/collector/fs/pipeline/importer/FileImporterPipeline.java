@@ -52,6 +52,17 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
     private static final Logger LOG =
             LogManager.getLogger(FileImporterPipeline.class);
 
+    private static boolean inverseDirVisit;
+    static {
+        try {
+            inverseDirVisit = "true".equals(System.getProperty("inverseDirVisit"));
+            LOG.info("Inverse directory visit: " + inverseDirVisit);
+        }
+        catch(Throwable e) {
+            LOG.error("", e);
+        }
+    }
+
     public FileImporterPipeline(boolean isKeepDownloads, boolean isSkipDocumentFetch) {
         addStage(new FolderPathsExtractorStage());
         addStage(new FileMetadataFetcherStage());
@@ -79,6 +90,7 @@ public class FileImporterPipeline extends Pipeline<ImporterPipelineContext> {
                 if (file.getType() == FileType.FOLDER) {
                     long start = System.currentTimeMillis();
                     FileObject[] files = file.getChildren();
+
                     LOG.debug("*** List children of " + file.getURL() + " in " + (System.currentTimeMillis() - start) + "ms - " + (files != null ? files.length : 0) + " children");
                     for (FileObject childFile : files) {
                         // Special chars such as # can be valid in local
